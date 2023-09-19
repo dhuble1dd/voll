@@ -38,41 +38,74 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    val vollViewModel : VollViewModel by viewModels(){
-        VollViewModelFactory(SavedStateHandle())
-    }
+    val vollViewModel : VollViewModel by viewModels()
 
     lateinit var text: TextView
 
     fun updateText(){
-        text.setText(vollViewModel.strList[vollViewModel.index])
+        text.setText(vollViewModel.strList[vollViewModel.index].question)
     }
 
+    lateinit var counter: TextView
 
+    fun updateCounter(){
+        counter.setText("Correct answers ${vollViewModel.correctAns} from 10" +
+                "right answer is ${vollViewModel.strList[vollViewModel.index].answer}")
+//        counter.setText(" ${vollViewModel.ans} ")
+    }
+    fun compairAns(){
+        if (vollViewModel.ans == vollViewModel.strList[vollViewModel.index].answer) {
+            vollViewModel.correctAns++
+//            updateCounter()
+        }
+//        vollViewModel.correctAns++
+    }
+
+    fun claimTheResult(){
+        compairAns()
+        if (vollViewModel.index==vollViewModel.strList.lastIndex){
+            text.setText("Correct answers ${vollViewModel.correctAns} from ${vollViewModel.strList.count()}")
+            counter.setText(when(vollViewModel.correctAns){
+                10 -> "exelent"
+                7,8,9 -> "good"
+                4,5,6 -> "normal"
+                1,2,3 -> "bad"
+                0 -> "you knew all answers"
+                else -> "hehehe"
+            })
+        } else {
+            vollViewModel.incIndex()
+            updateText()
+            updateCounter()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         text = findViewById(R.id.textView)
         updateText()
-
+        counter = findViewById(R.id.centerText)
+        updateCounter()
 
         pablo = "300"
         Log.d("HEHEHE", "${pablo}")
 
         val buttonPrev: Button = findViewById(R.id.button)
         buttonPrev.setOnClickListener {
-            vollViewModel.index = vollViewModel.index  - 1
-            updateText()
-
+            vollViewModel.ans = true
+            claimTheResult()
         }
 
         val buttonNext: Button = findViewById(R.id.button2)
         buttonNext.setOnClickListener {
-            Log.d("HEHEHE", "ppp is ${ppp}")
-            ooo = "${vollViewModel.index} + a"
-            vollViewModel.index = vollViewModel.index  + 1
-            updateText()
+//            Log.d("HEHEHE", "ppp is ${ppp}")
+//            ooo = "${vollViewModel.index} + a"
+            vollViewModel.ans = false
+            claimTheResult()
         }
+
+
+
     }
 }
