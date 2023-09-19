@@ -3,6 +3,7 @@ package com.example.voll
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     lateinit var counter: TextView
+    lateinit var buttonAgain: Button
 
     fun updateCounter(){
         counter.setText("Correct answers ${vollViewModel.correctAns} from 10" +
@@ -61,6 +63,7 @@ class MainActivity : AppCompatActivity() {
 //        vollViewModel.correctAns++
     }
 
+
     fun claimTheResult(){
         compairAns()
         if (vollViewModel.index==vollViewModel.strList.lastIndex){
@@ -73,6 +76,8 @@ class MainActivity : AppCompatActivity() {
                 0 -> "you knew all answers"
                 else -> "hehehe"
             })
+            buttonAgain.setVisibility(View.VISIBLE)
+
         } else {
             vollViewModel.incIndex()
             updateText()
@@ -105,7 +110,12 @@ class MainActivity : AppCompatActivity() {
             claimTheResult()
         }
 
-
-
+        buttonAgain = findViewById(R.id.button3)
+        buttonAgain.setOnClickListener {
+            vollViewModel.index = 0
+            vollViewModel.correctAns = 0
+            claimTheResult()
+            buttonAgain.setVisibility(View.INVISIBLE)
+        }
     }
 }
