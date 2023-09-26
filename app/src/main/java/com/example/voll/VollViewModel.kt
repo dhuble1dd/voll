@@ -50,4 +50,13 @@ class VollViewModel(private val savedStateHandle: SavedStateHandle): ViewModel()
         }
 //    var corText: String = "Correct answers $index from 10"
 //    var corText: String = "$index"
+
+    var hintCounter: Int
+        get(){
+            return savedStateHandle.get<Int>("hintCounter")?:let{0}
+        }
+        set(value:Int){
+            savedStateHandle.set<Int>("hintCounter", value)
+        }
+
 }

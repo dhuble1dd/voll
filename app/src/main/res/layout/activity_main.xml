@@ -10,7 +10,7 @@
         android:id="@+id/centerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -23,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/textview"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/centerText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.467"
@@ -63,13 +64,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="try again"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.548" />
+        app:layout_constraintVertical_bias="0.344" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recy"

@@ -2,6 +2,7 @@ package com.example.voll
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -97,6 +100,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var counter: TextView
     lateinit var buttonAgain: Button
+    lateinit var buttonPrev: Button
+    lateinit var buttonNext: Button
 
     fun updateCounter(){
         counter.setText("Correct answers ${vollViewModel.correctAns} from 10" +
@@ -110,12 +115,13 @@ class MainActivity : AppCompatActivity() {
         }
 //        vollViewModel.correctAns++
     }
-
+    var hintCounter = 0
 
     fun claimTheResult(){
         compairAns()
         if (vollViewModel.index==vollViewModel.strList.lastIndex){
-            text.setText("Correct answers ${vollViewModel.correctAns} from ${vollViewModel.strList.count()}")
+            text.setText("Correct answers ${vollViewModel.correctAns} from ${vollViewModel.strList.count()}" +
+                    "\n hint used ${hintCounter}")
             counter.setText(when(vollViewModel.correctAns){
                 10 -> "excellent"
                 7,8,9 -> "good"
@@ -124,14 +130,28 @@ class MainActivity : AppCompatActivity() {
                 0 -> "you knew all answers"
                 else -> "hehehe"
             })
-            buttonAgain.setVisibility(View.VISIBLE)
+            buttonAgain.text = "Try again"
+            buttonNext.isEnabled = false
+            buttonPrev.isEnabled = false
 
         } else {
             vollViewModel.incIndex()
             updateText()
-            updateCounter()
+//            updateCounter()
         }
     }
+
+    val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data != null) {
+            hintCounter = data.getIntExtra("hintCounter", 0)
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,7 +160,7 @@ class MainActivity : AppCompatActivity() {
         text = findViewById(R.id.textView)
         updateText()
         counter = findViewById(R.id.centerText)
-        updateCounter()
+//        updateCounter()
         val recy = binding.recy
 
         ourList.addAll((1..30).map{UUID.randomUUID().toString()})
@@ -155,26 +175,41 @@ class MainActivity : AppCompatActivity() {
         pablo = "300"
         Log.d("HEHEHE", "${pablo}")
 
-        val buttonPrev: Button = findViewById(R.id.button)
+        buttonPrev = findViewById(R.id.button)
         buttonPrev.setOnClickListener {
             vollViewModel.ans = true
             claimTheResult()
         }
 
-        val buttonNext: Button = findViewById(R.id.button2)
+        buttonNext = findViewById(R.id.button2)
         buttonNext.setOnClickListener {
-//            Log.d("HEHEHE", "ppp is ${ppp}")
-//            ooo = "${vollViewModel.index} + a"
+            if (vollViewModel.index==vollViewModel.strList.lastIndex){
+                buttonNext.isEnabled = false
+            }
             vollViewModel.ans = false
             claimTheResult()
         }
 
         buttonAgain = findViewById(R.id.button3)
+        buttonAgain.text = "Get the answer"
         buttonAgain.setOnClickListener {
-            vollViewModel.index = 0
-            vollViewModel.correctAns = 0
-            claimTheResult()
-            buttonAgain.setVisibility(View.INVISIBLE)
+            if (vollViewModel.index==vollViewModel.strList.lastIndex) {
+                vollViewModel.index = 0
+                vollViewModel.correctAns = 0
+                claimTheResult()
+                buttonAgain.text = "Get the answer"
+                hintCounter = 0
+                buttonNext.isEnabled = true
+                buttonPrev.isEnabled = true
+                counter.text = ""
+            } else {
+                val  intent = Intent(this, ShowHintActivity::class.java)
+                intent.putExtra("index", vollViewModel.index)
+                intent.putExtra("hintCounter", hintCounter)
+                launcher.launch(intent)
+
+            }
+//            buttonAgain.setVisibility(View.INVISIBLE)
         }
     }
 }
