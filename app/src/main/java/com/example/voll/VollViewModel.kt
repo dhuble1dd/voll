@@ -2,6 +2,7 @@ package com.example.voll
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import java.util.UUID
 
 data class Quiz(val question: String, val answer: Boolean)
 val q1 = Quiz("The Pacific Ocean is the largest ocean?", true)
@@ -17,6 +18,14 @@ val q10 = Quiz("One is the smallest prime number?", false)
 class VollViewModel(private val savedStateHandle: SavedStateHandle): ViewModel() {
 
     val strList = listOf(q1,q2,q3,q4,q5,q6,q7,q8,q9,q10)
+    val ourList = mutableListOf<String>()
+    val ourList2 = mutableListOf<Boolean>()
+
+    init {
+//        ourList.addAll((1..30).map{UUID.randomUUID().toString()})
+        ourList.addAll(strList.map { it.question })
+        ourList2.addAll(strList.map { it.answer })
+    }
 
     var index:Int
         get(){
@@ -58,5 +67,7 @@ class VollViewModel(private val savedStateHandle: SavedStateHandle): ViewModel()
         set(value:Int){
             savedStateHandle.set<Int>("hintCounter", value)
         }
+
+
 
 }
