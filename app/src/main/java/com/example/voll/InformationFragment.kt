@@ -1,17 +1,23 @@
 package com.example.voll
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.RecyclerView
 
 class InformationFragment : Fragment() {
 
-    val vollViewModel: VollViewModel by viewModels()
+    val vollViewModel: VollViewModel by activityViewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +36,7 @@ class InformationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 //        val navController = view.findNavController()
         val text = view.findViewById<TextView>(R.id.fragText)
-        text.text = "${vollViewModel.strList[vollViewModel.index].answer}"
+        Log.d("hehe", "${vollViewModel.index}")
+        text.text = "${vollViewModel.postsList[vollViewModel.index].body}"
     }
 }

@@ -2,6 +2,12 @@ package com.example.voll
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.request.get
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 data class Quiz(val question: String, val answer: Boolean)
@@ -15,11 +21,20 @@ val q7 = Quiz("Vladimir Putin is the current Russia President?", true)
 val q8 = Quiz("Is Baikal the deepest lake?", true)
 val q9 = Quiz("Is Сhomolungma the largest mountain?", true)
 val q10 = Quiz("One is the smallest prime number?", false)
+
+data class Posts(
+    val userId: Int,
+    val id: Int,
+    val title: String,
+    val body: String
+)
 class VollViewModel(private val savedStateHandle: SavedStateHandle): ViewModel() {
 
     val strList = listOf(q1,q2,q3,q4,q5,q6,q7,q8,q9,q10)
     val ourList = mutableListOf<String>()
     val ourList2 = mutableListOf<Boolean>()
+    val postsListString = mutableListOf<String>()
+    val postsList = mutableListOf<Posts>()
 
     init {
 //        ourList.addAll((1..30).map{UUID.randomUUID().toString()})
@@ -69,5 +84,25 @@ class VollViewModel(private val savedStateHandle: SavedStateHandle): ViewModel()
         }
 
 
+//    var jsonString = gson.fromJson()
+
+    init {
+        viewModelScope.launch {
+            getPosts()
+        }
+    }
+    suspend fun getPosts() {
+        var gson = Gson()
+        val client = HttpClient(CIO)
+        var post = ""
+        for (i in 1..30){
+            post = client.get<String>("https://jsonplaceholder.typicode.com/posts/$i")
+            postsListString.add(post)
+        }
+    postsList.addAll(postsListString.map{gson.fromJson(it, Posts::class.java)})
+//        for (postStr in postsListString){
+//            postsList.add(gson.fromJson(postStr, Posts))
+//        }
+    }
 
 }

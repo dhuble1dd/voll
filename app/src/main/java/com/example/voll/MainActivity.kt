@@ -1,36 +1,13 @@
 package com.example.voll
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
-import androidx.core.view.children
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.SavedStateViewModelFactory
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.voll.databinding.ActivityMainBinding
-import java.util.UUID
-import java.util.concurrent.RecursiveAction
-import kotlin.math.log
-import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
 
@@ -129,11 +106,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        supportFragmentManager.beginTransaction().apply {
-            replace (R.id.fragmentContainerView, RecyclerViewFragment())
-            commit()
+        if (Build.VERSION.SDK_INT > 9) {
+            val policy = ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(policy)
         }
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController

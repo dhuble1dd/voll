@@ -6,14 +6,15 @@
     tools:context=".RecyclerViewFragment">
 
 
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/frag_rec"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent" />-->
-    <Button
-        android:id="@+id/navbtn"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/frag_rec"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Button" />
+        android:layout_height="match_parent" />
+<!--    <Button-->
+<!--        android:id="@+id/navbtn"-->
+<!--        -->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:text="Button" />-->
 </FrameLayout>
