@@ -41,6 +41,8 @@ class OurRecyclerAdapter(val context: Context, val elements: List<Posts>, privat
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.textView.text = elements[position].title
+//        notifyDataSetChanged()
+
         if(position%2 == 0){
             holder.textView.setBackgroundColor(ContextCompat.getColor(context,R.color.colorPrimary))
         }

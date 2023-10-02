@@ -3,8 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/recyclerViewFragment">
+    app:startDestination="@id/startFragment">
 
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.voll.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_recyclerViewFragment"
+            app:destination="@id/recyclerViewFragment" />
+    </fragment>
     <fragment
         android:id="@+id/recyclerViewFragment"
         android:name="com.example.voll.RecyclerViewFragment"
@@ -23,4 +32,5 @@
             android:id="@+id/action_informationFragment_to_recyclerViewFragment"
             app:destination="@id/recyclerViewFragment" />
     </fragment>
+
 </navigation>

@@ -34,7 +34,8 @@ class VollViewModel(private val savedStateHandle: SavedStateHandle): ViewModel()
     val ourList = mutableListOf<String>()
     val ourList2 = mutableListOf<Boolean>()
     val postsListString = mutableListOf<String>()
-    val postsList = mutableListOf<Posts>()
+    val postsList by lazy { mutableListOf<Posts>() }
+    var refresh = ""
 
     init {
 //        ourList.addAll((1..30).map{UUID.randomUUID().toString()})
@@ -99,10 +100,7 @@ class VollViewModel(private val savedStateHandle: SavedStateHandle): ViewModel()
             post = client.get<String>("https://jsonplaceholder.typicode.com/posts/$i")
             postsListString.add(post)
         }
-    postsList.addAll(postsListString.map{gson.fromJson(it, Posts::class.java)})
-//        for (postStr in postsListString){
-//            postsList.add(gson.fromJson(postStr, Posts))
-//        }
+        postsList.addAll(postsListString.map{gson.fromJson(it, Posts::class.java)})
     }
 
 }

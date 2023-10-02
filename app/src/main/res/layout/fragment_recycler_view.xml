@@ -8,7 +8,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/frag_rec"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:name="rcv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 <!--    <Button-->

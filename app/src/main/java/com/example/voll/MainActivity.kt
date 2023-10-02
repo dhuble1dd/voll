@@ -1,5 +1,6 @@
 package com.example.voll
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
@@ -112,9 +113,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView3) as NavHostFragment
         val navController = navHostFragment.navController
-
+        binding.button.setOnClickListener{
+            val intent = Intent(this, BoudService::class.java)
+            startService(intent)
+        }
 //        text = findViewById(R.id.textView)
 //        updateText()
 //        counter = findViewById(R.id.centerText)

@@ -1,23 +1,17 @@
 package com.example.voll
 
-import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.os.StrictMode
-import android.service.autofill.OnClickAction
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
-import androidx.core.view.children
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.findFragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,8 +22,6 @@ import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 
 
 class RecyclerViewFragment : Fragment() {
@@ -71,7 +63,17 @@ class RecyclerViewFragment : Fragment() {
             }
 
 
-        Log.d("hehehe", "${vollViewModel.postsList}")
+//        GlobalScope.launch(Dispatchers.Main) {
+//            if(vollViewModel.refresh.isEmpty()){
+//                vollViewModel.getPosts()
+//                vollViewModel.refresh = "1"
+//                navController.run {
+//                    popBackStack()
+//                    navigate(R.id.recyclerViewFragment)
+//                }
+//            }
+//
+//        }
 
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recy.layoutManager = LinearLayoutManager(requireContext())
