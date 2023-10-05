@@ -1,13 +1,17 @@
 package com.example.voll
 
+import android.content.ComponentName
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.os.StrictMode
-import android.os.StrictMode.ThreadPolicy
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
+import com.example.voll.MyService.MyBinder
 import com.example.voll.databinding.ActivityMainBinding
 import kotlin.reflect.KProperty
 
@@ -101,14 +105,15 @@ class MainActivity : AppCompatActivity() {
 //            hintCounter = data.getIntExtra("hintCounter", 0)
 //        }
 //    }
-
+    var mService: MyService? = null
+    var mIsBound: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         if (Build.VERSION.SDK_INT > 9) {
-            val policy = ThreadPolicy.Builder().permitAll().build()
+            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
         }
 
@@ -116,9 +121,11 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView3) as NavHostFragment
         val navController = navHostFragment.navController
         binding.button.setOnClickListener{
-            val intent = Intent(this, BoudService::class.java)
+            val intent = Intent(this, MyService::class.java)
             startService(intent)
         }
+
+
 //        text = findViewById(R.id.textView)
 //        updateText()
 //        counter = findViewById(R.id.centerText)
@@ -170,4 +177,50 @@ class MainActivity : AppCompatActivity() {
 //            buttonAgain.setVisibility(View.INVISIBLE)
 //        }
     }
+    override fun onResume() {
+        super.onResume()
+        startService()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (mIsBound == true) {
+            unbindService(serviceConnection)
+            mIsBound = false
+        }
+    }
+    private fun startService() {
+        val serviceIntent = Intent(this, MyService::class.java)
+        startService(serviceIntent)
+        bindService()
+    }
+
+    private fun bindService() {
+        val serviceBindIntent = Intent(this, MyService::class.java)
+        bindService(serviceBindIntent, serviceConnection, BIND_AUTO_CREATE)
+    }
+
+    private val serviceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, iBinder: IBinder) {
+            Log.d("hehe", "ServiceConnection: connected to service.")
+            // We've bound to MyService, cast the IBinder and get MyBinder instance
+            val binder = iBinder as MyBinder
+            mService = binder.service
+            mIsBound = true
+            getRandomNumberFromService() // return a random number from the service
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            Log.d("hehe", "ServiceConnection: disconnected from service.")
+            mIsBound = false
+        }
+    }
+
+    private fun getRandomNumberFromService() {
+        Log.d(
+            "hehe",
+            "getRandomNumberFromService: Random number from service: " + mService!!.randomNumber
+        )
+    }
+
 }

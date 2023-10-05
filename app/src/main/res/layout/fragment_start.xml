@@ -26,5 +26,46 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="Button" />
+
+
+
+        <TextView
+            android:id="@+id/smsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/addressText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select sender name"
+            android:gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/add1"
+                android:layout_width="99dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="DodoPizza" />
+            <Button
+                android:id="@+id/add2"
+                android:layout_width="99dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="YOTA" />
+            <Button
+                android:id="@+id/add3"
+                android:layout_width="99dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="RSCHS" />
+        </LinearLayout>
+
     </LinearLayout>
 </FrameLayout>
