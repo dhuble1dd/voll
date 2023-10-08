@@ -1,19 +1,30 @@
 package com.example.voll
 
+import android.app.DownloadManager
+import android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE
+import android.content.BroadcastReceiver
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.IBinder
 import android.os.StrictMode
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.voll.MyService.MyBinder
 import com.example.voll.databinding.ActivityMainBinding
 import kotlin.reflect.KProperty
+import java.util.concurrent.TimeUnit
 
 
 class Delegate{
@@ -122,9 +133,60 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         binding.button.setOnClickListener{
             val intent = Intent(this, MyService::class.java)
-            startService(intent)
+            startService()
         }
 
+        fun saveDownloaded(link:String){
+            val ll = link.split("/")
+//            val linkList = link.split(",")
+//            for (i in 0..linkList.lastIndex){
+                val request = DownloadManager.Request(Uri.parse("$link"))
+                    .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
+                    .setTitle("${ll[ll.lastIndex]}")
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${ll[ll.lastIndex]}")
+                val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                downloadManager.enqueue(request)
+
+//                val broadcastReceiver = object: BroadcastReceiver(){
+//                    override fun onReceive(p0: Context?, p1: Intent?) {
+//                        Log.d("HEHEHE", "received")
+//
+//                    }
+//                }
+//            }
+        }
+        val dmnL = "https://img3.akspic.ru/crops/7/4/2/8/6/168247/168247-kosti_3d-igra_v_kosti_3d-azartnaya_igra-pitevaya_igra-kazino-1080x1920.jpg,https://e0.pxfuel.com/wallpapers/22/756/desktop-wallpaper-white-tiger-fantasy-fire-rocks-walking-majestic-clouds-design.jpg,https://www.shutterstock.com/shutterstock/photos/1340841551/display_1500/stock-vector-green-chinese-dragon-and-white-tiger-in-the-landscape-with-waterfall-rocks-plants-and-clouds-1340841551.jpg"
+        val dmnlSplit = dmnL.split(",")
+
+
+        binding.brBtn.setOnClickListener{
+//            val request = DownloadManager.Request(Uri.parse("https://ya.ru"))
+//
+//            val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+//            downloadManager.enqueue(request)
+            var index = 0
+            saveDownloaded(dmnlSplit[index])
+            val broadcastReceiver = object: BroadcastReceiver(){
+                override fun onReceive(p0: Context?, p1: Intent?) {
+
+                    while (index<dmnlSplit.lastIndex){
+                        index+=1
+                        saveDownloaded(dmnlSplit[index])
+                    }
+
+                }
+            }
+//
+            registerReceiver(broadcastReceiver, IntentFilter( ACTION_DOWNLOAD_COMPLETE))
+//            saveDownloaded(dmnL)
+
+//            val workRequest = OneTimeWorkRequestBuilder<MyWorker>().build()
+//            val workRequest2 = PeriodicWorkRequestBuilder<MyWorker>(1, TimeUnit.SECONDS).build()
+//
+//            WorkManager.getInstance(this@MainActivity).enqueue(workRequest2)
+
+        }
 
 //        text = findViewById(R.id.textView)
 //        updateText()
